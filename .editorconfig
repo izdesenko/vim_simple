@@ -1,0 +1,29 @@
+; .editorconfig
+
+root = true
+tab_width = 2
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[**.js]
+indent_style = space
+indent_size = 2
+node = true
+braces_on_own_line = false
+space_in_paren = false
+space_in_empty_paren = false
+space_after_conditional = true
+indent_with_tabs = true
+
+
+[**.css]
+indent_style = space
+indent_size = 2
+
+[**.html]
+indent_style = space
+indent_size = 2
+brace_style = expand
+

@@ -1,0 +1,90 @@
+# vim: syntax=sh
+export EDITOR=vim
+export VISUAL=vim
+export GIT_EDITOR=vim
+export LESS=' -RSx4 ' # less without word wrapp
+export TERM='xterm-256color'
+
+LESSCHARSET="UTF-8"
+
+export PS1='\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;00m\]\h \[\033[01;34m\]\w\[\033[01;35m\]$(__git_ps1 "(%s)")\$ \[\033[00m\]'
+
+go() {
+	BRANCH=$1
+	
+	if [ ! "$BRANCH" ]
+	then
+		BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	fi
+	
+	git pull origin $BRANCH
+}
+
+work(){
+	SESSION="ilya";
+	if [ "$1" ]
+	then
+		SESSION="$SESSION$1";
+	else
+		SESSION=$SESSION"1";
+	fi
+	tmux attach -t $SESSION
+	if [ $? -ne 0 ]; then
+		tmux -f ~/.vim/tmux.conf new -s $SESSION
+	fi
+}
+
+# push to current branch to all remotes
+gop() {
+	BRANCH=$1
+	
+	if [ ! "$BRANCH" ]
+	then
+		BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	fi
+	
+	for R in $(git remote)
+	do
+		GIT_SSH_COMMAND="ssh -o ConnectTimeout=10 " git push $R $BRANCH
+	done
+}
+
+who_uses_port(){
+	if [ ! "$1" ]
+	then 
+		echo "You should specify port number";
+		return 1;
+	fi
+}
+
+alias ll="ls -lAF"
+alias gis="git -c color.ui=always -c color.status=always status"
+alias ga="git add "
+alias gc='git commit -m '
+alias gca='git commit --amend -m '
+alias gdw="git diff -w --word-diff "
+alias gfo="git fetch origin"
+alias vim="vim -p"
+alias view="view -p"
+alias VIM="vim"
+alias FG="fg"
+alias free_space="df . -h"
+
+alias timestamp='date "+%s"'
+alias download='curl --progress-bar --fail -O '
+alias used_ports="lsof -i"
+alias used_ports2="netstat -tulpn"
+alias lynx='lynx -accept_all_cookies'
+
+random(){
+	HEAD="head -n 1"
+	if [ ! -z $1 ]
+	then
+		HEAD="head -c $1"
+	fi
+	echo $(cat /dev/urandom | tr -dc '\\/,.!@#$%^*{}[];:|~&()a-zA-Z0-9_+-' | fold -w 100 | $HEAD)
+}
+
+treeps(){
+	ps auxwf | grep -B8 "$1"
+}
